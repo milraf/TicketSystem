@@ -1,0 +1,52 @@
+﻿@using TicketSystem.Managers
+@using TicketSystem.Models
+@inject UserManager userManager
+@inject NavigationManager nav
+
+@if(openRegisterForm)
+{
+    <EditForm Model="@registerModel" OnValidSubmit="@RegisterUser">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <InputText @bind-Value="registerModel.EmailAddress" placeholder="Email Address"></InputText>
+        <InputText @bind-Value="registerModel.Password" placeholder="Password" type="password"></InputText>
+        <InputText @bind-Value="registerModel.RepeatPassword" placeholder="Repeat password" type="password"></InputText>
+        <button class="btn btn-primary" type="submit">Register</button>
+        <button class="btn btn-outline-info" @onclick="() => openRegisterForm = false">Login</button>
+    </EditForm>
+}
+else
+{
+    <EditForm Model="@loginModel" OnValidSubmit="@LoginUser">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <InputText @bind-Value="loginModel.EmailAddress" placeholder="Email Address"></InputText>
+        <InputText @bind-Value="loginModel.Password" placeholder="Password" type="password"></InputText>
+        <button class="btn btn-primary" type="submit">Login</button>
+        <button class="btn btn-outline-info" @onclick="() => openRegisterForm = true">Register</button>
+    </EditForm>
+}
+
+
+
+
+
+
+@code {
+    private bool openRegisterForm;
+
+    private DisplayUserLoginModel loginModel = new DisplayUserLoginModel();
+    private DisplayUserRegisterModel registerModel = new DisplayUserRegisterModel();
+
+    private void LoginUser()
+    {
+        userManager.Login(loginModel);
+        loginModel = new DisplayUserLoginModel();
+    }
+
+    private async Task RegisterUser()
+    {
+        await userManager.Register(registerModel);
+        registerModel = new DisplayUserRegisterModel();
+    }
+}

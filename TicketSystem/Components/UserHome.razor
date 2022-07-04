@@ -1,0 +1,40 @@
+﻿@using SQLDataAccess.Models
+@inject NavigationManager nav
+<button class="btn btn-primary" @onclick="NavigateToCreateTicket">Create Ticket</button>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <td></td>
+            <td>Id</td>
+            <td>Date</td>
+            <td>Title</td>
+            <td>Status</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(TicketModel ticket in userTickets)
+        {
+            <tr>
+                <td>Add Edit/Delete buttons here</td>
+                <td>@ticket.Id</td>
+                <td>@ticket.DateTime</td>
+                <td>@ticket.Title</td>
+                <td>@ticket.Status</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@code {
+
+    private List<TicketModel> userTickets = new List<TicketModel>();
+
+
+
+    private void NavigateToCreateTicket()
+    {
+        nav.NavigateTo("/createTicket");
+    }
+}

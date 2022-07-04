@@ -1,0 +1,35 @@
+﻿@page "/"
+@using TicketSystem.Managers
+@inject UserManager userManager
+@inject TicketManager ticketManager
+
+@if(userManager != null && userManager.CurrentUser != null)
+{
+    @if(userManager.CurrentUser.IsAdmin)
+    {
+        //Admin panel
+    }
+    else
+    {
+        //User panel
+    }
+}
+else
+{
+    <TicketSystem.Components.Login></TicketSystem.Components.Login>
+}
+
+
+@code{
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        userManager.loginChanged += OnUserChanged;
+    }
+
+    private void OnUserChanged()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+}

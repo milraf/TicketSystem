@@ -1,0 +1,27 @@
+﻿@using TicketSystem.Managers
+@using TicketSystem.Models
+@inject NavigationManager nav
+@inject TicketManager ticketManager
+
+<EditForm class="form-control" Model="@ticket" OnValidSubmit="@CreateNewTicket">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <InputText @bind-Value="ticket.Title"></InputText>
+    <InputText @bind-Value="ticket.Description"></InputText>
+    <button class="btn btn-outline-primary" type="submit">Create ticket</button>
+</EditForm>
+
+
+
+
+@code {
+
+    private DisplayTicketModel ticket = new DisplayTicketModel();
+
+    private async Task CreateNewTicket()
+    {
+        await ticketManager.CreateTicket(ticket);
+        ticket = new DisplayTicketModel();
+        nav.NavigateTo("/");
+    }
+}
