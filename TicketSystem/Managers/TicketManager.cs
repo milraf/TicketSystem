@@ -71,6 +71,13 @@ namespace TicketSystem.Managers
             await TicketDb.UpdateTicket(ticket);
         }
 
+        public async Task DeleteTicketById(int id)
+        {
+            var ticket = ticketModels.FirstOrDefault(x => x.Id == id);
+            await TicketDb.RemoveTicket(ticket);
+            ticketModels.Remove(ticket);
+        }
+
         public async Task Initialize()
         {
             ticketModels = await TicketDb.GetTickets();

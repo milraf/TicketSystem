@@ -41,5 +41,11 @@ namespace SQLDataAccess
             string sql = $@"UPDATE {database} SET DateTime = @DateTime, Title = @Title, Description = @Description, Status = @Status, SolvedById = @SolvedById WHERE Id = @Id;";
             return db.SaveData(sql, ticket);
         }
+
+        public Task RemoveTicket(TicketModel ticket)
+        {
+            string sql = $@"DELETE FROM {database} WHERE Id = @Id;";
+            return db.SaveData(sql, ticket);
+        }
     }
 }

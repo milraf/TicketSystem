@@ -4,6 +4,10 @@
 @inject TicketManager ticketManager
 @inject UserManager userManager
 
+<ModalComponent @ref="warningModal" Title="Delete ticket" SubmitButtonTitle="Delete ticket" Callback="DeleteTicket">
+    <p>Delete this ticket? You can not undo this action.</p>
+</ModalComponent>
+
 <button class="btn btn-primary" @onclick="NavigateToCreateTicket">Create Ticket</button>
 
 <table class="table table-striped">
@@ -22,7 +26,7 @@
             <tr>
                 <td>
                     <button class="btn btn-outline-info" @onclick="() => EditTicket(ticket.Id)">Edit</button>
-                    <button class="btn btn-outline-danger" @onclick="() => DeleteTicket(ticket.Id)">Delete</button>
+                    <button class="btn btn-outline-danger" @onclick="() => OpenDeleteTicket(ticket.Id)">Delete</button>
                 </td>
                 <td>@ticket.Id</td>
                 <td>@ticket.DateTime</td>
@@ -35,6 +39,8 @@
 
 
 @code {
+    private ModalComponent warningModal;
+    private int idTicketToDelete;
 
     private List<TicketModel> userTickets = new List<TicketModel>();
 
@@ -55,9 +61,18 @@
         nav.NavigateTo($"/edit-ticket/{id}");
     }
 
-    private void DeleteTicket(int id)
+    private void OpenDeleteTicket(int id)
     {
-        //Open modal dialog
+        warningModal.Show();
+        idTicketToDelete = id;
         //Delete ticket
+    }
+
+    private async Task DeleteTicket()
+    {
+        await ticketManager.DeleteTicketById(idTicketToDelete);
+        var ticketToRemove = userTickets.FirstOrDefault(x => x.Id == idTicketToDelete);
+        userTickets.Remove(ticketToRemove);
+        await InvokeAsync(StateHasChanged);
     }
 }
