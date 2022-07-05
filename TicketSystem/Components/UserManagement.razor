@@ -1,0 +1,20 @@
+﻿@using TicketSystem.Managers
+@inject UserManager userManager
+@if(userManager.CurrentUser != null)
+{
+    <p><span class="oi oi-person"> @userManager.CurrentUser.EmailAddress</span> <button class="btn btn-link" @onclick="() => userManager.Logout()">Logout</button></p>
+}
+
+@code{
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        userManager.loginChanged += OnLoginChanged;
+    }
+
+    private void OnLoginChanged()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
+}
