@@ -15,7 +15,7 @@ namespace TicketSystem.Managers
 
         public Action loginChanged;
         public bool IsLoggedIn { get; set; }
-        public UserModel? CurrentUser { get; set; }
+        public UserModel? CurrentUser { get; set; } 
        
         private List<UserModel> userModels = new List<UserModel>();
 

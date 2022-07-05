@@ -5,26 +5,39 @@
 
 @if(openRegisterForm)
 {
-    <EditForm Model="@registerModel" OnValidSubmit="@RegisterUser">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-        <InputText @bind-Value="registerModel.EmailAddress" placeholder="Email Address"></InputText>
-        <InputText @bind-Value="registerModel.Password" placeholder="Password" type="password"></InputText>
-        <InputText @bind-Value="registerModel.RepeatPassword" placeholder="Repeat password" type="password"></InputText>
-        <button class="btn btn-primary" type="submit">Register</button>
-        <button class="btn btn-outline-info" @onclick="() => openRegisterForm = false">Login</button>
-    </EditForm>
+    <div class="d-flex justify-content-center">
+        <div class="card" style="width:20rem">
+            <h4 class="card-header" style="text-align: center">Register</h4>
+            <EditForm class="card-body" Model="@registerModel" OnValidSubmit="@RegisterUser">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <InputText class="form-control my-2" @bind-Value="registerModel.EmailAddress" placeholder="Email Address"></InputText>
+                <InputText class="form-control my-2" @bind-Value="registerModel.Password" placeholder="Password" type="password"></InputText>
+                <InputText class="form-control my-2" @bind-Value="registerModel.RepeatPassword" placeholder="Repeat password" type="password"></InputText>
+                <button class="btn btn-primary my-2" type="submit">Register</button>
+            </EditForm>
+            <button class="btn btn-link card-footer" @onclick="() => openRegisterForm = false">Login</button>
+        </div>
+    </div>
+    
+    
 }
 else
 {
-    <EditForm Model="@loginModel" OnValidSubmit="@LoginUser">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-        <InputText @bind-Value="loginModel.EmailAddress" placeholder="Email Address"></InputText>
-        <InputText @bind-Value="loginModel.Password" placeholder="Password" type="password"></InputText>
-        <button class="btn btn-primary" type="submit">Login</button>
-        <button class="btn btn-outline-info" @onclick="() => openRegisterForm = true">Register</button>
-    </EditForm>
+    <div class="d-flex justify-content-center">
+        <div class="card" style="width:20rem">
+            <h4 class="card-header" style="text-align: center">Login</h4>
+            <EditForm class="card-body" Model="@loginModel" OnValidSubmit="@LoginUser">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <InputText class="form-control my-2" @bind-Value="loginModel.EmailAddress" placeholder="Email Address"></InputText>
+                <InputText class="form-control my-2" @bind-Value="loginModel.Password" placeholder="Password" type="password"></InputText>
+                <button class="btn btn-primary my-2" type="submit">Login</button>
+            </EditForm>
+            <button class="btn btn-link card-footer" @onclick="() => openRegisterForm = true">Register</button>
+        </div>
+    </div>
+    
 }
 
 

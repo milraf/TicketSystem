@@ -8,46 +8,71 @@
     <p>Delete this ticket? You can not undo this action.</p>
 </ModalComponent>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <td></td>
-            <td>Id</td>
-            <td>Title</td>
-            <td>Status</td>
-            <td>Date</td>
-            <td>Requestor</td>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach(TicketModel ticket in tickets)
-        {
+<div class="d-flex justify-content-center">
+    <table class="table table-striped">
+        <thead>
             <tr>
                 <td>
-                    <button class="btn btn-outline-info" @onclick="() => EditTicket(ticket.Id)">Edit</button>
-                    <button class="btn btn-outline-danger" @onclick="() => OpenDeleteTicket(ticket.Id)">Delete</button>
+                    <input class="form-control" type="text" placeholder="Filter by title"
+                            @bind="Filter"
+                            @bind:event="oninput"/>
                 </td>
-                <td>@ticket.Id</td>
-                <td>@ticket.Title</td>
-                <td>@Enum.GetName(typeof(TicketStatus), ticket.Status)</td>
-                <td>@ticket.DateTime</td>
-                <td>@userManager.GetUserById(@ticket.RequestorId).EmailAddress</td>
+                <td @onclick="() => Sort(Sorter.Id)">Id <span class="@sortArrows[0]"></span></td>
+                <td @onclick="() => Sort(Sorter.Title)">Title <span class="@sortArrows[1]"></span></td>
+                <td @onclick="() => Sort(Sorter.TicketStatus)">Status <span class="@sortArrows[2]"></span></td>
+                <td @onclick="() => Sort(Sorter.Date)">Date <span class="@sortArrows[3]"></span></td>
+                <td @onclick="() => Sort(Sorter.Requestor)">Requestor <span class="@sortArrows[4]"></span></td>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach(TicketModel ticket in tickets)
+            {
+                if (!string.IsNullOrEmpty(Filter))
+                {
+                    if (!ticket.Title.Contains(Filter, StringComparison.OrdinalIgnoreCase) && !userManager.GetUserById(@ticket.RequestorId).EmailAddress.Contains(Filter))
+                    {
+                        continue;
+                    }
+                }
+                <tr>
+                    <td>
+                        <button class="btn btn-outline-info" @onclick="() => EditTicket(ticket.Id)">Edit</button>
+                        <button class="btn btn-outline-danger" @onclick="() => OpenDeleteTicket(ticket.Id)">Delete</button>
+                    </td>
+                    <td>@ticket.Id</td>
+                    <td>@ticket.Title</td>
+                    <td>@Enum.GetName(typeof(TicketStatus), ticket.Status)</td>
+                    <td>@ticket.DateTime</td>
+                    <td>@userManager.GetUserById(@ticket.RequestorId).EmailAddress</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
 
 @code {
+    public string? Filter { get; set; }
+
     private ModalComponent warningModal;
     private int idTicketToDelete;
 
     List<TicketModel> tickets = new List<TicketModel>();
+    List<TicketModel> allTickets = new List<TicketModel>();
+
+    private bool sortingDesc;
+    private Sorter sorter;
+
+    private string sortArrowUp = "oi oi-collapse-up";
+    private string sortArrowDown = "oi oi-collapse-down";
+    private string[] sortArrows = {"","","","",""};
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
 
-        tickets = await ticketManager.LoadTickets();
+        allTickets = await ticketManager.LoadTickets();
+        tickets = allTickets.Where(x => x.Status != (int)TicketStatus.Solved).ToList();
     }
 
     private void EditTicket(int id)
@@ -67,7 +92,96 @@
         await ticketManager.DeleteTicketById(idTicketToDelete);
         var ticketToRemove = tickets.FirstOrDefault(x => x.Id == idTicketToDelete);
         tickets.Remove(ticketToRemove);
+        allTickets.Remove(ticketToRemove);
         await InvokeAsync(StateHasChanged);
     }
 
+    private void Sort(Sorter sort)
+    {
+        if (sorter == sort) sortingDesc = !sortingDesc;
+        else sortingDesc = true;
+        sorter = sort;
+        for(int i = 0; i < sortArrows.Length; i++)
+        {
+            sortArrows[i] = "";
+        }
+        switch (sort)
+        {
+            case Sorter.Id:
+                if (!sortingDesc)
+                {
+                    tickets = tickets.OrderBy(x => x.Id).ToList();
+                    sortArrows[0] = sortArrowUp;
+                }
+                else
+                {
+                    tickets = tickets.OrderByDescending(x => x.Id).ToList();
+                    sortArrows[0] = sortArrowDown;
+                } 
+                break;
+            case Sorter.Title:
+                if (!sortingDesc)
+                {
+                    tickets = tickets.OrderBy(x => x.Title).ToList();
+                    sortArrows[1] = sortArrowUp;
+                }
+                else
+                {
+                    tickets = tickets.OrderByDescending(x => x.Title).ToList();
+                    sortArrows[1] = sortArrowDown;
+                }
+                break;
+            case Sorter.TicketStatus:
+                if (!sortingDesc)
+                {
+                    tickets = tickets.OrderBy(x => x.Status).ToList();
+                    sortArrows[2] = sortArrowUp;
+                }
+                else
+                {
+                    tickets = tickets.OrderByDescending(x => x.Status).ToList();
+                    sortArrows[2] = sortArrowDown;
+                }
+                break;
+            case Sorter.Date:
+                if (!sortingDesc)
+                {
+                    tickets = tickets.OrderBy(x => x.DateTime).ToList();
+                    sortArrows[3] = sortArrowUp;
+                }
+                else
+                {
+                    tickets = tickets.OrderByDescending(x => x.DateTime).ToList();
+                    sortArrows[3] = sortArrowDown;
+                }
+                break;
+            case Sorter.Requestor:
+                if (!sortingDesc)
+                {
+                    tickets = tickets.OrderBy(x => x.RequestorId).ToList();
+                    sortArrows[4] = sortArrowUp;
+                }
+                else
+                {
+                    tickets = tickets.OrderByDescending(x => x.RequestorId).ToList();
+                    sortArrows[4] = sortArrowDown;
+                }
+                break;
+        }
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void OnInputFilter()
+    {
+        tickets = tickets.Where(x => x.Title.Contains(Filter)).ToList();
+    }
+
+    public enum Sorter
+    {
+        Id,
+        Title,
+        TicketStatus,
+        Date,
+        Requestor
+    }
 }
