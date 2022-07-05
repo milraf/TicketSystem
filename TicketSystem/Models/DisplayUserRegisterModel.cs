@@ -5,6 +5,7 @@ namespace TicketSystem.Models
     public class DisplayUserRegisterModel
     {
         [Required]
+        [EmailAddress]
         public string EmailAddress { get; set; }
         [Required]
         [MinLength(8)]

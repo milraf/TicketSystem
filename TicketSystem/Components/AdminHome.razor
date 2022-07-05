@@ -13,6 +13,9 @@
         <thead>
             <tr>
                 <td>
+                    <label for="checkbox">Show solved tickets</label>
+                    <input id="checkbox" type="checkbox"
+                            @bind="ShowSolvedTickets"/>
                     <input class="form-control" type="text" placeholder="Filter by title"
                             @bind="Filter"
                             @bind:event="oninput"/>
@@ -34,6 +37,10 @@
                         continue;
                     }
                 }
+                if(!ShowSolvedTickets && ticket.Status == (int)TicketStatus.Solved)
+                {
+                    continue;
+                }
                 <tr>
                     <td>
                         <button class="btn btn-outline-info" @onclick="() => EditTicket(ticket.Id)">Edit</button>
@@ -53,6 +60,7 @@
 
 @code {
     public string? Filter { get; set; }
+    public bool ShowSolvedTickets { get; set; }
 
     private ModalComponent warningModal;
     private int idTicketToDelete;
@@ -71,8 +79,9 @@
     {
         await base.OnInitializedAsync();
 
-        allTickets = await ticketManager.LoadTickets();
-        tickets = allTickets.Where(x => x.Status != (int)TicketStatus.Solved).ToList();
+        tickets = await ticketManager.LoadTickets();
+        //allTickets = await ticketManager.LoadTickets();
+        //tickets = allTickets.Where(x => x.Status != (int)TicketStatus.Solved).ToList();
     }
 
     private void EditTicket(int id)

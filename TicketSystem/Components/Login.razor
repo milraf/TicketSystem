@@ -11,16 +11,20 @@
             <EditForm class="card-body" Model="@registerModel" OnValidSubmit="@RegisterUser">
                 <DataAnnotationsValidator />
                 <ValidationSummary />
+                @if(showRegistrationFailed)
+                {
+                    <ul>
+                        <li style="color: red">@registrationFailed</li>
+                    </ul>
+                }
                 <InputText class="form-control my-2" @bind-Value="registerModel.EmailAddress" placeholder="Email Address"></InputText>
                 <InputText class="form-control my-2" @bind-Value="registerModel.Password" placeholder="Password" type="password"></InputText>
                 <InputText class="form-control my-2" @bind-Value="registerModel.RepeatPassword" placeholder="Repeat password" type="password"></InputText>
                 <button class="btn btn-primary my-2" type="submit">Register</button>
             </EditForm>
-            <button class="btn btn-link card-footer" @onclick="() => openRegisterForm = false">Login</button>
+            <button class="btn btn-link card-footer" @onclick="ChangeForm">Login</button>
         </div>
     </div>
-    
-    
 }
 else
 {
@@ -30,36 +34,55 @@ else
             <EditForm class="card-body" Model="@loginModel" OnValidSubmit="@LoginUser">
                 <DataAnnotationsValidator />
                 <ValidationSummary />
+                @if(showLoginFailed)
+                {
+                    <ul>
+                        <li style="color:red">@loginFailed</li>
+                    </ul>
+                }
                 <InputText class="form-control my-2" @bind-Value="loginModel.EmailAddress" placeholder="Email Address"></InputText>
                 <InputText class="form-control my-2" @bind-Value="loginModel.Password" placeholder="Password" type="password"></InputText>
                 <button class="btn btn-primary my-2" type="submit">Login</button>
             </EditForm>
-            <button class="btn btn-link card-footer" @onclick="() => openRegisterForm = true">Register</button>
+            <button class="btn btn-link card-footer" @onclick="ChangeForm">Register</button>
         </div>
-    </div>
-    
-}
-
-
-
-
-
+    </div>}
 
 @code {
     private bool openRegisterForm;
+    bool showLoginFailed;
+    bool showRegistrationFailed;
 
     private DisplayUserLoginModel loginModel = new DisplayUserLoginModel();
     private DisplayUserRegisterModel registerModel = new DisplayUserRegisterModel();
+    private string loginFailed = "";
+    private string registrationFailed = "";
+
+    private void ChangeForm()
+    {
+        openRegisterForm = !openRegisterForm;
+        showLoginFailed = false;
+        showRegistrationFailed = false;
+    }
 
     private void LoginUser()
     {
-        userManager.Login(loginModel);
+        if (!userManager.Login(loginModel))
+        {
+            loginFailed = "Wrong email or password";
+            showLoginFailed = true;
+        }
         loginModel = new DisplayUserLoginModel();
     }
 
     private async Task RegisterUser()
     {
-        await userManager.Register(registerModel);
+        var tuple = await userManager.Register(registerModel);
+        if(!tuple.Item1)
+        {
+            registrationFailed = tuple.Item2;
+            showRegistrationFailed = true;
+        }
         registerModel = new DisplayUserRegisterModel();
     }
 }

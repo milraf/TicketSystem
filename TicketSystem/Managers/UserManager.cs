@@ -48,10 +48,13 @@ namespace TicketSystem.Managers
             IsLoggedIn = false;
             loginChanged.Invoke();
         }
-
-        public async Task<bool> Register(DisplayUserRegisterModel registerModel)
+        public async Task<Tuple<bool, string>> Register(DisplayUserRegisterModel registerModel)
         {
-            if(!userModels.Exists(x => x.EmailAddress == registerModel.EmailAddress))
+            if (registerModel.Password != registerModel.RepeatPassword)
+            {
+                return new Tuple<bool, string>(false, "Passwords do not match");
+            }
+            if (!userModels.Exists(x => x.EmailAddress == registerModel.EmailAddress))
             {
                 UserModel model = new UserModel()
                 {
@@ -68,9 +71,9 @@ namespace TicketSystem.Managers
                     Password = registerModel.Password
                 };
                 Login(login);
-                return true;
+                return new Tuple<bool, string>(true, "Registering...");
             }
-            return false;
+            return new Tuple<bool, string>(false,"Email already registered");
         }
 
         public async Task Initialize()
