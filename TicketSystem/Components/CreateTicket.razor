@@ -16,12 +16,12 @@
 
 @code {
 
-    private DisplayTicketModel ticket = new DisplayTicketModel();
+    private DisplayUserTicketModel ticket = new DisplayUserTicketModel();
 
     private async Task CreateNewTicket()
     {
         await ticketManager.CreateTicket(ticket);
-        ticket = new DisplayTicketModel();
+        ticket = new DisplayUserTicketModel();
         nav.NavigateTo("/");
     }
 }

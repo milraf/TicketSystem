@@ -22,7 +22,12 @@ namespace TicketSystem.Managers
             return await TicketDb.GetTickets();
         }
 
-        public async Task CreateTicket(DisplayTicketModel model)
+        public TicketModel? GetTicketById(int id)
+        {
+            return ticketModels.FirstOrDefault(x => x.Id == id);
+        }
+
+        public async Task CreateTicket(DisplayUserTicketModel model)
         {
             TicketModel ticket = new TicketModel()
             {
@@ -36,6 +41,34 @@ namespace TicketSystem.Managers
 
             await TicketDb.InsertTicket(ticket);
             ticketModels = await TicketDb.GetTickets();
+        }
+
+        public async Task EditTicketUser(DisplayUserTicketModel model, int ticketId)
+        {
+            var ticket = ticketModels.FirstOrDefault(x => x.Id == ticketId);
+            ticket.Title = model.Title;
+            ticket.Description = model.Description;
+
+            await TicketDb.UpdateTicket(ticket);
+        }
+
+        public async Task EditTicketAdmin(DisplayAdminTicketModel model, int ticketId)
+        {
+            var ticket = ticketModels.FirstOrDefault(x => x.Id == ticketId);
+            ticket.Title = model.Title;
+            ticket.Description = model.Description;
+            ticket.Status = (int)model.Status;
+
+            await TicketDb.UpdateTicket(ticket);
+        }
+
+        public async Task EditTicketAdmin(DisplayUserTicketModel model, int ticketId)
+        {
+            var ticket = ticketModels.FirstOrDefault(x => x.Id == ticketId);
+            ticket.Title = model.Title;
+            ticket.Description = model.Description;
+            //Add admin add stuff
+            await TicketDb.UpdateTicket(ticket);
         }
 
         public async Task Initialize()

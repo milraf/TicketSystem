@@ -35,5 +35,11 @@ namespace SQLDataAccess
             string sql = $@"INSERT INTO {database} (RequestorId, DateTime, Title, Description, Status, SolvedById) VALUES (@RequestorId, @DateTime, @Title, @Description, @Status, @SolvedById);";
             return db.SaveData(sql, ticket);
         }
+
+        public Task UpdateTicket(TicketModel ticket)
+        {
+            string sql = $@"UPDATE {database} SET DateTime = @DateTime, Title = @Title, Description = @Description, Status = @Status, SolvedById = @SolvedById WHERE Id = @Id;";
+            return db.SaveData(sql, ticket);
+        }
     }
 }

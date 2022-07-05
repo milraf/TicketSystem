@@ -2,7 +2,7 @@
 
 namespace TicketSystem.Models
 {
-    public class DisplayTicketModel
+    public class DisplayUserTicketModel
     {
         [Required]
         public string Title { get; set; }

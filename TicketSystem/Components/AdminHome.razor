@@ -2,6 +2,7 @@
 @using TicketSystem.Managers
 @inject TicketManager ticketManager
 @inject UserManager userManager
+@inject NavigationManager nav
 
 
 <table class="table table-striped">
@@ -19,8 +20,10 @@
         @foreach(TicketModel ticket in tickets)
         {
             <tr>
-
-                <td></td>
+                <td>
+                    <button class="btn btn-outline-info" @onclick="() => EditTicket(ticket.Id)">Edit</button>
+                    <button class="btn btn-outline-danger" @onclick="() => DeleteTicket(ticket.Id)">Delete</button>
+                </td>
                 <td>@ticket.Id</td>
                 <td>@ticket.Title</td>
                 <td>@Enum.GetName(typeof(TicketStatus), ticket.Status)</td>
@@ -42,7 +45,17 @@
         await base.OnInitializedAsync();
 
         tickets = await ticketManager.LoadTickets();
+    }
 
+    private void EditTicket(int id)
+    {
+        nav.NavigateTo($"/edit-ticket/{id}");
+    }
+
+    private void DeleteTicket(int id)
+    {
+        //Open modal dialog
+        //Delete ticket
     }
 
 }

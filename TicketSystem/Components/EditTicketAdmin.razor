@@ -1,0 +1,40 @@
+﻿@using TicketSystem.Managers
+@inject TicketManager ticketManager
+@inject NavigationManager nav
+
+<EditForm Model="ticketModel" OnValidSubmit="EditTicket">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <InputText @bind-Value="ticketModel.Title" placeholder="Ticket"></InputText>
+    <InputTextArea @bind-Value="ticketModel.Description" placeholder="Description"></InputTextArea>
+    <InputSelect @bind-Value="ticketModel.Status">
+        <option value="@TicketStatus.Open">@Enum.GetName(typeof(TicketStatus), TicketStatus.Open)</option>
+        <option value="@TicketStatus.Urgent">@Enum.GetName(typeof(TicketStatus), TicketStatus.Urgent)</option>
+        <option value="@TicketStatus.CurrentlyProcessed">@Enum.GetName(typeof(TicketStatus), TicketStatus.CurrentlyProcessed)</option>
+        <option value="@TicketStatus.Solved">@Enum.GetName(typeof(TicketStatus), TicketStatus.Solved)</option>
+    </InputSelect>
+    <button class="btn btn-outline-primary">Edit ticket</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    DisplayAdminTicketModel ticketModel = new DisplayAdminTicketModel();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        var ticket = ticketManager.GetTicketById(Id);
+        ticketModel.Title = ticket.Title;
+        ticketModel.Description = ticket.Description;
+        ticketModel.Status = (TicketStatus)ticket.Status;
+    }
+
+    private async Task EditTicket()
+    {
+        await ticketManager.EditTicketAdmin(ticketModel, Id);
+        nav.NavigateTo("/");
+    }
+}

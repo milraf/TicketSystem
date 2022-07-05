@@ -1,0 +1,33 @@
+﻿@using TicketSystem.Managers
+@inject TicketManager ticketManager
+@inject NavigationManager nav
+
+<EditForm Model="ticketModel" OnValidSubmit="EditTicket">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <InputText @bind-Value="ticketModel.Title" placeholder="Ticket"></InputText>
+    <InputText @bind-Value="ticketModel.Description" placeholder="Description"></InputText>
+    <button class="btn btn-outline-primary">Edit ticket</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    DisplayUserTicketModel ticketModel = new DisplayUserTicketModel();
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        var ticket = ticketManager.GetTicketById(Id);
+        ticketModel.Title = ticket.Title;
+        ticketModel.Description = ticket.Description;
+    }
+
+    private async Task EditTicket()
+    {
+        await ticketManager.EditTicketUser(ticketModel, Id);
+        nav.NavigateTo("/");
+    }
+}

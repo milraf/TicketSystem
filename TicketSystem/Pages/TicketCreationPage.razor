@@ -8,12 +8,12 @@
     <ValidationSummary />
     <InputText @bind-Value="ticketModel.Title" placeholder="Title"></InputText>
     <InputTextArea @bind-Value="ticketModel.Description" placeholder="Description"></InputTextArea>
-    <button class="btn btn-outline-primary">Create new ticket</button>
+    <button class="btn btn-outline-primary" type="submit">Create new ticket</button>
 </EditForm>
 
 
 @code {
-    DisplayTicketModel ticketModel = new DisplayTicketModel();
+    DisplayUserTicketModel ticketModel = new DisplayUserTicketModel();
 
     private async Task CreateTicket()
     {

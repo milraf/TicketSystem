@@ -1,0 +1,31 @@
+﻿@page "/edit-ticket/{id:int}"
+@using TicketSystem.Managers
+@inject UserManager userManager
+@inject TicketManager ticketManager
+
+@if(parameterLoaded && userManager != null && userManager.CurrentUser != null)
+{
+    @if (userManager.CurrentUser.IsAdmin)
+    {
+        <EditTicketAdmin Id="@Id"></EditTicketAdmin>
+    }
+    else
+    {
+        <EditTicketUser Id="@Id"></EditTicketUser>
+    }
+
+}
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private bool parameterLoaded;
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        parameterLoaded = true;
+    }
+}

@@ -20,7 +20,10 @@
         @foreach(TicketModel ticket in userTickets)
         {
             <tr>
-                <td>Add Edit/Delete buttons here</td>
+                <td>
+                    <button class="btn btn-outline-info" @onclick="() => EditTicket(ticket.Id)">Edit</button>
+                    <button class="btn btn-outline-danger" @onclick="() => DeleteTicket(ticket.Id)">Delete</button>
+                </td>
                 <td>@ticket.Id</td>
                 <td>@ticket.DateTime</td>
                 <td>@ticket.Title</td>
@@ -45,5 +48,16 @@
     private void NavigateToCreateTicket()
     {
         nav.NavigateTo("/create-ticket");
+    }
+
+    private void EditTicket(int id)
+    {
+        nav.NavigateTo($"/edit-ticket/{id}");
+    }
+
+    private void DeleteTicket(int id)
+    {
+        //Open modal dialog
+        //Delete ticket
     }
 }
