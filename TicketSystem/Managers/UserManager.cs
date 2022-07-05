@@ -37,6 +37,11 @@ namespace TicketSystem.Managers
             else return false;
         }
 
+        public UserModel? GetUserById(int id)
+        {
+            return userModels.FirstOrDefault(x => x.Id == id);
+        }
+
         public void Logout()
         {
             CurrentUser = null;

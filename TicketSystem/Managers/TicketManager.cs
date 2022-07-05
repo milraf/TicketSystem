@@ -17,6 +17,11 @@ namespace TicketSystem.Managers
 
         private List<TicketModel> ticketModels = new List<TicketModel>();
          
+        public async Task<List<TicketModel>> LoadTickets()
+        {
+            return await TicketDb.GetTickets();
+        }
+
         public async Task CreateTicket(DisplayTicketModel model)
         {
             TicketModel ticket = new TicketModel()

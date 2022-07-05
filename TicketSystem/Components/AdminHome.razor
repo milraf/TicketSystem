@@ -1,49 +1,48 @@
 ﻿@using SQLDataAccess.Models
 @using TicketSystem.Managers
-@inject NavigationManager nav
 @inject TicketManager ticketManager
 @inject UserManager userManager
 
-<button class="btn btn-primary" @onclick="NavigateToCreateTicket">Create Ticket</button>
 
 <table class="table table-striped">
     <thead>
         <tr>
             <td></td>
             <td>Id</td>
-            <td>Date</td>
             <td>Title</td>
             <td>Status</td>
+            <td>Date</td>
+            <td>Requestor</td>
         </tr>
     </thead>
     <tbody>
-        @foreach(TicketModel ticket in userTickets)
+        @foreach(TicketModel ticket in tickets)
         {
             <tr>
-                <td>Add Edit/Delete buttons here</td>
+
+                <td></td>
                 <td>@ticket.Id</td>
-                <td>@ticket.DateTime</td>
                 <td>@ticket.Title</td>
                 <td>@Enum.GetName(typeof(TicketStatus), ticket.Status)</td>
+                <td>@ticket.DateTime</td>
+                <td>@userManager.GetUserById(@ticket.RequestorId).EmailAddress</td>
             </tr>
         }
     </tbody>
 </table>
 
 
+
 @code {
 
-    private List<TicketModel> userTickets = new List<TicketModel>();
+    List<TicketModel> tickets = new List<TicketModel>();
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        var tickets = await ticketManager.LoadTickets();
-        userTickets = tickets.Where(x => x.RequestorId == userManager.CurrentUser.Id).ToList();
+
+        tickets = await ticketManager.LoadTickets();
+
     }
 
-    private void NavigateToCreateTicket()
-    {
-        nav.NavigateTo("/create-ticket");
-    }
 }

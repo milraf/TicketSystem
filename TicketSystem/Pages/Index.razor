@@ -7,16 +7,16 @@
 {
     @if(userManager.CurrentUser.IsAdmin)
     {
-        //Admin panel
+        <AdminHome></AdminHome>
     }
     else
     {
-        //User panel
+        <UserHome></UserHome>
     }
 }
 else
 {
-    <TicketSystem.Components.Login></TicketSystem.Components.Login>
+    <Login></Login>
 }
 
 

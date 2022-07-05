@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketSystem", "TicketSystem\TicketSystem.csproj", "{E9ADA169-6466-40A4-BBC5-05CCAF6B5500}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicketSystem", "TicketSystem\TicketSystem.csproj", "{E9ADA169-6466-40A4-BBC5-05CCAF6B5500}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLDataAccess", "SQLDataAccess\SQLDataAccess.csproj", "{56FCC338-BE33-418F-B2B1-BD2017146BFD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SQLDataAccess", "SQLDataAccess\SQLDataAccess.csproj", "{56FCC338-BE33-418F-B2B1-BD2017146BFD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
