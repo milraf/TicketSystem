@@ -5,15 +5,24 @@
 <EditForm Model="ticketModel" OnValidSubmit="EditTicket">
     <DataAnnotationsValidator />
     <ValidationSummary />
-    <InputText @bind-Value="ticketModel.Title" placeholder="Ticket"></InputText>
-    <InputTextArea @bind-Value="ticketModel.Description" placeholder="Description"></InputTextArea>
-    <InputSelect @bind-Value="ticketModel.Status">
+    <div class="mb-3">
+        <label for="Title">Title</label>
+        <InputText id="title" class="form-control" @bind-Value="ticketModel.Title" placeholder="Ticket"></InputText>
+    </div>
+    <div div class="mb-3">
+        <label for="description">Description</label>
+        <InputTextArea id="description" class="form-control" style="height: 16rem; resize: none" @bind-Value="ticketModel.Description" placeholder="Description"></InputTextArea>
+    </div>
+    <div div class="mb-3">
+        <label for="status">Ticket status</label>
+        <InputSelect id="status" class="form-control" @bind-Value="ticketModel.Status">
         <option value="@TicketStatus.Open">@Enum.GetName(typeof(TicketStatus), TicketStatus.Open)</option>
         <option value="@TicketStatus.Urgent">@Enum.GetName(typeof(TicketStatus), TicketStatus.Urgent)</option>
         <option value="@TicketStatus.CurrentlyProcessed">@Enum.GetName(typeof(TicketStatus), TicketStatus.CurrentlyProcessed)</option>
         <option value="@TicketStatus.Solved">@Enum.GetName(typeof(TicketStatus), TicketStatus.Solved)</option>
     </InputSelect>
-    <button class="btn btn-outline-primary">Edit ticket</button>
+    </div>
+    <button class="btn btn-outline-primary" type="submit">Edit ticket</button>
 </EditForm>
 
 @code {

@@ -2,12 +2,19 @@
 @inject TicketManager ticketManager
 @inject NavigationManager nav
 
+
 <EditForm Model="ticketModel" OnValidSubmit="EditTicket">
     <DataAnnotationsValidator />
     <ValidationSummary />
-    <InputText @bind-Value="ticketModel.Title" placeholder="Ticket"></InputText>
-    <InputTextArea @bind-Value="ticketModel.Description" placeholder="Description"></InputTextArea>
-    <button class="btn btn-outline-primary">Edit ticket</button>
+    <div class="mb-3">
+        <label for="title">Title</label>
+        <InputText id="title" class="form-control" @bind-Value="ticketModel.Title" placeholder="Ticket"></InputText>
+    </div>
+    <div div class="mb-3">
+        <label for="description">Description</label>
+        <InputTextArea id="description" class="form-control" style="height: 16rem; resize: none" @bind-Value="ticketModel.Description" placeholder="Description"></InputTextArea>
+    </div>
+    <button class="btn btn-outline-primary" type="submit">Edit ticket</button>
 </EditForm>
 
 @code {
